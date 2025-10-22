@@ -33,7 +33,7 @@ def dataCleaner(df):
     df = df.apply(lambda col: col.str.strip().str.lower() if col.dtype == "string" else col)
 
     df["Sex"] = df["Sex"].map({'male':1,'female':0})
-    df["Age Class"] = df["Age Class"].map({'hatchling':0,'juvenile':1,'subadult':2,'adult':3})
+    df["Age Class"] = df["Age Class"].map({'hatchling':0,'juvenile':0,'subadult':1,'adult':1})
 
     return df
 
@@ -45,7 +45,7 @@ x = data.drop(columns=["Age Class"])
 y = data["Age Class"]
 
 
-xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.25)
+xTrain, xTest, yTrain, yTest = train_test_split(x, y, test_size=0.25, stratify=y)
 
 # ML Preprocessing
 
@@ -66,8 +66,8 @@ xTest = scaler.transform(xTest)
 
 def tuneModel(xTrain, yTrain):
     paramGrid = {
-        "n_neighbors": range(1,21),
-        "metric": ["euclidean", "manhattan", "minkowski"],
+        "n_neighbors": range(1,31),
+        "metric": ["euclidean", "manhattan", "minkowski", "hamming"],
         "weights": ["uniform", "distance"]
     }
 
@@ -93,4 +93,17 @@ accuracy, matrix = evaluate(bestModel, xTest, yTest)
 print(f'Accuracy: {accuracy*100:.2f}')
 print("Matrix")
 print(matrix)
+
+
+labels = ["child", "adult"]
+
+plt.figure(figsize=(4, 3))
+sns.heatmap(matrix, annot=True, fmt='d', cmap='Blues',
+            xticklabels=labels, yticklabels=labels, cbar=False)
+
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title(f"Child vs Adult Confusion Matrix (Acc: {accuracy*100:.2f}%)")
+plt.tight_layout()
+plt.show()
 

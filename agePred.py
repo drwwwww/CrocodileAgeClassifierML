@@ -66,7 +66,7 @@ xTest = scaler.transform(xTest)
 
 def tuneModel(xTrain, yTrain):
     paramGrid = {
-        "n_neighbors": range(1,31),
+        "n_neighbors": range(1,91),
         "metric": ["euclidean", "manhattan", "minkowski", "hamming"],
         "weights": ["uniform", "distance"]
     }
@@ -98,7 +98,7 @@ print(matrix)
 labels = ["child", "adult"]
 
 plt.figure(figsize=(4, 3))
-sns.heatmap(matrix, annot=True, fmt='d', cmap='Blues',
+sns.heatmap(matrix, annot=True, fmt='d', cmap='Greens',
             xticklabels=labels, yticklabels=labels, cbar=False)
 
 plt.xlabel("Predicted")
